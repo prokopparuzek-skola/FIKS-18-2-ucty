@@ -15,22 +15,55 @@ void load(ucet_t *co, ucet_t **kam, int N) {
     }
 }
 
-int cmpZ (ucet_t *a, ucet_t *b) {
-    return b->Z - a->Z;
+void swap(ucet_t **a , ucet_t **b) {
+    ucet_t *s;
+
+    s = *a;
+    *a = *b;
+    *b = s;
 }
 
-int cmpB (ucet_t *a, ucet_t *b) {
-    return a->B - b->B;
+void sortZ(ucet_t **ucty, int from, int to) {
+    int pivot = ucty[from]->Z;
+    int i, gros = from;
+
+    swap(&ucty[0], &ucty[to-1]);
+    for (i = from; i < to; i++) {
+        if (ucty[i]->Z > pivot) {
+            swap(&ucty[i], &ucty[gros]);
+            gros++;
+        }
+    }
+    swap(&ucty[pivot], &ucty[gros]);
+    if (gros != from)
+        sortZ(ucty, from, gros);
+    if (gros != to -1)
+        sortZ(ucty, gros + 1, to);
 }
 
-void sort (ucet_t **ucty, int N, int(*cmp)(ucet_t*, ucet_t*)) {
+void sortB(ucet_t **ucty, int from, int to) {
+    int pivot = ucty[from]->B;
+    int i, less = from;
 
+    swap(&ucty[0], &ucty[to-1]);
+    for (i = from; i < to; i++) {
+        if (ucty[i]->B < pivot) {
+            swap(&ucty[i], &ucty[less]);
+            less++;
+        }
+    }
+    swap(&ucty[pivot], &ucty[less]);
+    if (less != from)
+        sortZ(ucty, from, less);
+    if (less != to -1)
+        sortZ(ucty, less + 1, to);
 }
 
 int solve(ucet_t **Zucty, ucet_t ** Bucty, int N, int K) {
     int i, num, index;
     while (K >= 0) {
         for (i = 0, num = Zucty[0]->Z; i < N && Zucty[i]->Z == num; i++) {
+            sortZ(Zucty, 0, N);
             for (index = 0; index < N && Bucty[index]->Z >= Zucty[i]->Z; index++);
             if ((Zucty[i]->A + Bucty[index]->B) <= K && Zucty[i]->Z > Bucty[index]->Z) {
                 Zucty[i]->Z--;
@@ -38,7 +71,7 @@ int solve(ucet_t **Zucty, ucet_t ** Bucty, int N, int K) {
                 K -= (Zucty[i]->A + Bucty[index]->B);
             }
             else {
-                sort(Zucty, N, cmpZ);
+                sortZ(Zucty, 0, N);
                 return Zucty[0]->Z;
             }
         }
@@ -71,8 +104,8 @@ int main() {
 
     load(ucty, Zucty, N);
     load(ucty, Bucty, N);
-    sort(Zucty, N, cmpZ);
-    sort(Bucty, N, cmpB);
+    sortZ(Zucty, 0, N);
+    sortB(Bucty, 0, N);
 
     back = solve(Zucty, Bucty, N, K);
     printf("%d\n", back);
