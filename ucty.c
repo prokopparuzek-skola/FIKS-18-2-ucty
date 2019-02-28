@@ -5,7 +5,7 @@ typedef struct {
     int Z;
     int A;
     int B;
-} ucet_t;
+} ucet_t; // zde jsou uloženy údaje o účtech
 
 void load(ucet_t *co, ucet_t **kam, int N) {
     int i;
@@ -23,7 +23,7 @@ void swap(ucet_t **a , ucet_t **b) {
     *b = s;
 }
 
-void sortZ(ucet_t **ucty, int from, int to) {
+void sortZ(ucet_t **ucty, int from, int to) { // seřazení účtůpodle obnosu
     int pivot = ucty[from]->Z;
     int i, gros = from;
 
@@ -41,7 +41,7 @@ void sortZ(ucet_t **ucty, int from, int to) {
         sortZ(ucty, gros + 1, to);
 }
 
-void sortB(ucet_t **ucty, int from, int to) {
+void sortB(ucet_t **ucty, int from, int to) { //seřazení účtů dle ceny za příchozí platbu
     int pivot = ucty[from]->B;
     int i, less = from;
 
@@ -62,21 +62,20 @@ void sortB(ucet_t **ucty, int from, int to) {
 int solve(ucet_t **Zucty, ucet_t ** Bucty, int N, int K) {
     int i, num, index;
     while (K >= 0) {
-        for (i = 0, num = Zucty[0]->Z; i < N && Zucty[i]->Z == num; i++) {
+        for (i = 0, num = Zucty[0]->Z; i < N && Zucty[i]->Z == num; i++) { // prochází účty o stejném obnosu
             sortZ(Zucty, 0, N);
-            for (index = 0; index < N && Bucty[index]->Z >= Zucty[i]->Z; index++);
+            for (index = 0; index < N && Bucty[index]->Z >= Zucty[i]->Z; index++); // zjistí účet s co nejnižší cenou za příchozí platbu, na který se peníze vejdou
             if ((Zucty[i]->A + Bucty[index]->B) <= K && Zucty[i]->Z > Bucty[index]->Z + 1) {
                 Zucty[i]->Z--;
                 Bucty[index]->Z++;
                 K -= (Zucty[i]->A + Bucty[index]->B);
             }
-            else {
+            else { // vrátí nejvyšší obnos
                 sortZ(Zucty, 0, N);
                 return Zucty[0]->Z;
             }
         }
     }
-    return Zucty[0]->Z;
 }
 
 int main() {
