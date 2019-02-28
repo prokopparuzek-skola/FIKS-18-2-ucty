@@ -15,16 +15,16 @@ void load(ucet_t *co, ucet_t **kam, int N) {
     }
 }
 
-int cmpZ (const void *ucetA, const void *ucetB) {
-    ucet_t *a = (ucet_t*)&ucetA;
-    ucet_t *b = (ucet_t*)&ucetB;
+int cmpZ (ucet_t *a, ucet_t *b) {
     return b->Z - a->Z;
 }
 
-int cmpB (const void *ucetA, const void *ucetB) {
-    ucet_t *a = (ucet_t*)&ucetA;
-    ucet_t *b = (ucet_t*)&ucetB;
-    return a->Z - b->Z;
+int cmpB (ucet_t *a, ucet_t *b) {
+    return a->B - b->B;
+}
+
+void sort (ucet_t **ucty, int N, int(*cmp)(ucet_t*, ucet_t*)) {
+
 }
 
 int solve(ucet_t **Zucty, ucet_t ** Bucty, int N, int K) {
@@ -32,14 +32,13 @@ int solve(ucet_t **Zucty, ucet_t ** Bucty, int N, int K) {
     while (K >= 0) {
         for (i = 0, num = Zucty[0]->Z; i < N && Zucty[i]->Z == num; i++) {
             for (index = 0; index < N && Bucty[index]->Z >= Zucty[i]->Z; index++);
-            index--;
             if ((Zucty[i]->A + Bucty[index]->B) <= K && Zucty[i]->Z > Bucty[index]->Z) {
                 Zucty[i]->Z--;
                 Bucty[index]->Z++;
                 K -= (Zucty[i]->A + Bucty[index]->B);
             }
             else {
-                qsort(Zucty, N, sizeof(ucet_t*), cmpZ);
+                sort(Zucty, N, cmpZ);
                 return Zucty[0]->Z;
             }
         }
@@ -72,8 +71,8 @@ int main() {
 
     load(ucty, Zucty, N);
     load(ucty, Bucty, N);
-    qsort(Zucty, N, sizeof(ucet_t*), cmpZ);
-    qsort(Bucty, N, sizeof(ucet_t*), cmpB);
+    sort(Zucty, N, cmpZ);
+    sort(Bucty, N, cmpB);
 
     back = solve(Zucty, Bucty, N, K);
     printf("%d\n", back);
