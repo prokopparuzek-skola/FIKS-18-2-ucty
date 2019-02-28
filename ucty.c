@@ -65,7 +65,7 @@ int solve(ucet_t **Zucty, ucet_t ** Bucty, int N, int K) {
         for (i = 0, num = Zucty[0]->Z; i < N && Zucty[i]->Z == num; i++) {
             sortZ(Zucty, 0, N);
             for (index = 0; index < N && Bucty[index]->Z >= Zucty[i]->Z; index++);
-            if ((Zucty[i]->A + Bucty[index]->B) <= K && Zucty[i]->Z > Bucty[index]->Z) {
+            if ((Zucty[i]->A + Bucty[index]->B) <= K && Zucty[i]->Z > Bucty[index]->Z + 1) {
                 Zucty[i]->Z--;
                 Bucty[index]->Z++;
                 K -= (Zucty[i]->A + Bucty[index]->B);
