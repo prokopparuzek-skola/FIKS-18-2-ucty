@@ -27,14 +27,14 @@ void sortZ(ucet_t **ucty, int from, int to) {
     int pivot = ucty[from]->Z;
     int i, gros = from;
 
-    swap(&ucty[0], &ucty[to-1]);
-    for (i = from; i < to; i++) {
+    swap(&ucty[from], &ucty[to-1]);
+    for (i = from; i < to -1; i++) {
         if (ucty[i]->Z > pivot) {
             swap(&ucty[i], &ucty[gros]);
             gros++;
         }
     }
-    swap(&ucty[pivot], &ucty[gros]);
+    swap(&ucty[to-1], &ucty[gros]);
     if (gros != from)
         sortZ(ucty, from, gros);
     if (gros != to -1)
@@ -45,14 +45,14 @@ void sortB(ucet_t **ucty, int from, int to) {
     int pivot = ucty[from]->B;
     int i, less = from;
 
-    swap(&ucty[0], &ucty[to-1]);
-    for (i = from; i < to; i++) {
+    swap(&ucty[from], &ucty[to-1]);
+    for (i = from; i < to - 1; i++) {
         if (ucty[i]->B < pivot) {
             swap(&ucty[i], &ucty[less]);
             less++;
         }
     }
-    swap(&ucty[pivot], &ucty[less]);
+    swap(&ucty[to-1], &ucty[less]);
     if (less != from)
         sortZ(ucty, from, less);
     if (less != to -1)
