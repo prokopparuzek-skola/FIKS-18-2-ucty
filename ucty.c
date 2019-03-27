@@ -76,6 +76,7 @@ int solve(ucet_t **Zucty, ucet_t ** Bucty, int N, int K) {
             }
         }
     }
+    return -1;
 }
 
 int main() {
